@@ -1,0 +1,19 @@
+.important_level{
+
+}
+.important_level .level_1{
+  color: #f35325;
+}
+.important_level .level_2{
+  color: #ffba08;
+}
+.important_level .level_3{
+  color: #81bc06;
+}
+.important_level .level_4{
+  color: #05a6f0;
+}
+
+.btn-area{
+  
+}

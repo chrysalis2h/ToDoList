@@ -1,0 +1,48 @@
+{
+  "pages":[
+    "pages/todolist/list/list",
+    "pages/todolist/add/add",
+    "pages/todolist/finish/finish",
+    "pages/todolist/my/my",
+    "pages/index/index",
+    "pages/logs/logs"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle":"black"
+  },
+  "tabBar":{
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/todolist/list/list",
+        "iconPath": "img/icon_API.png",
+        "selectedIconPath": "img/icon_API_HL.png",
+        "text": "今日"
+      },
+      {
+        "pagePath": "pages/todolist/add/add",
+        "iconPath": "img/icon_API.png",
+        "selectedIconPath": "img/icon_API_HL.png",
+        "text": "添加"
+      },
+      {
+        "pagePath": "pages/todolist/finish/finish",
+        "iconPath": "img/icon_API.png",
+        "selectedIconPath": "img/icon_API_HL.png",
+        "text": "往日"
+      },
+      {
+        "pagePath": "pages/todolist/my/my",
+        "iconPath": "img/icon_component.png",
+        "selectedIconPath": "img/icon_component_HL.png",
+        "text": "我"
+      }
+    ]
+  }
+}

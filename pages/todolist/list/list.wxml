@@ -1,0 +1,23 @@
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+  <view class="page__bd">
+    <!-- <view class="weui-toptips weui-toptips_warn" wx:if="{{showTopTips}}">错误提示</view> -->
+    <view wx:for="{{items}}" wx:for-item="day" wx:key="{{day.datetime}}">
+      <view class="weui-cells__title">{{day.datetime}}</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <checkbox-group bindchange="checkboxChange">
+              <label class="weui-cell weui-check__label" wx:for="{{day.todoTaskList}}" wx:for-item="todoTask" wx:key="{{todoTask.value}}">
+                <view class="weui-cell__hd">
+                  <checkbox value="{{todoTask.value}}" checked="{{todoTask.checked}}" />
+                </view>
+                <view class="weui-cell__bd">{{todoTask.name}}</view>
+              </label>
+            </checkbox-group>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__tips">底部说明文字底部说明文字</view>
+  </view>
+</view>

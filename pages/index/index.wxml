@@ -1,0 +1,18 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <block>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <view class="usermotto">
+    <view class="page-body">
+      <view class="btn-area">
+        <navigator url="../../pages/todolist/todolist" hover-class="navigator-hover">
+          <button type="default">进入</button>
+        </navigator>
+      </view>
+    </view>
+  </view>
+</view>
