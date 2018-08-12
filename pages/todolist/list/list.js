@@ -5,7 +5,6 @@ Page({
    */
   onLoad: function (options) {
     console.info("onLoad-list");
-    console.info(this.data);
   },
 
   /**
@@ -20,7 +19,6 @@ Page({
    */
   onShow: function () {
     console.info(getCurrentPages());
-    console.info("onShow-list");
   },
 
   /**
@@ -57,19 +55,7 @@ Page({
   onShareAppMessage: function () {
     console.info("onShareAppMessage-list");
   },
-  onTabItemTap(item) {
-    this.setData({
-      tabIndex: item.index,
-      tabItem: item
-    });
-    console.log("onTabItemTap" + item.index)
-    console.log("onTabItemTap" + item.pagePath)
-    console.log("onTabItemTap" + item.text)
-  },
   data: {
-    tabIndex: 0,
-    tabIndex: {},
-    currentDate: '2018-8-6 22:06:20',
     items: [
       {
         datetime: '2018-8-6 22:06:20',
