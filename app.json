@@ -21,26 +21,26 @@
     "list": [
       {
         "pagePath": "pages/todolist/list/list",
-        "iconPath": "img/icon_API.png",
-        "selectedIconPath": "img/icon_API_HL.png",
+        "iconPath": "img/list.png",
+        "selectedIconPath": "img/list-o.png",
         "text": "今日"
       },
       {
         "pagePath": "pages/todolist/add/add",
-        "iconPath": "img/icon_API.png",
-        "selectedIconPath": "img/icon_API_HL.png",
+        "iconPath": "img/add.png",
+        "selectedIconPath": "img/add-o.png",
         "text": "添加"
       },
       {
         "pagePath": "pages/todolist/finish/finish",
-        "iconPath": "img/icon_API.png",
-        "selectedIconPath": "img/icon_API_HL.png",
+        "iconPath": "img/finish.png",
+        "selectedIconPath": "img/finish-o.png",
         "text": "往日"
       },
       {
         "pagePath": "pages/todolist/my/my",
-        "iconPath": "img/icon_component.png",
-        "selectedIconPath": "img/icon_component_HL.png",
+        "iconPath": "img/my.png",
+        "selectedIconPath": "img/my-o.png",
         "text": "我"
       }
     ]

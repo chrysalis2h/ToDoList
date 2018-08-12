@@ -8,7 +8,8 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    happyFlag: null
   },
   /**
    * 生命周期函数--监听页面加载
@@ -99,5 +100,18 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+  },
+  bindChangeLike: function(){
+    console.info("changeLike");
+    var like = true;
+    if(this.data.happyFlag == null || !this.data.happyFlag){
+      like = true;
+    }else if(this.data.happyFlag){
+      like = false;
+    }
+    this.setData({
+      happyFlag : like
+    });
+    console.info(this.data.happyFlag);
   }
 })

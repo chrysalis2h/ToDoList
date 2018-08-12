@@ -1,9 +1,24 @@
-<!--index.wxml-->
-<view class="container">
-  <view class="userinfo">
-    <block>
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-    </block>
+<import src="../../common/purecss/like/like.wxml" />
+<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+  <view class="page__bd">
+    <view class="userinfo">
+      <block>
+        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
+    </view>
+    <view class="weui-flex" style="padding-top:50%;">
+      <view class="weui-flex__item">
+        <view class="placeholder"></view>
+      </view>
+      <view class="weui-flex__item">
+        <view class="placeholder" bindtap="bindChangeLike">
+          <template is="like" data="{{happyFlag}}"/>
+        </view>
+      </view>
+      <view class="weui-flex__item">
+        <view class="placeholder"></view>
+      </view>
+    </view>
   </view>
 </view>

@@ -1,0 +1,3 @@
+<template name="like">
+  <div class="heart {{happyFlag == null ? '' : (happyFlag ? 'happy' : 'broken')}}">❤</div>
+</template>

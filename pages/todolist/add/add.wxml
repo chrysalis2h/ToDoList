@@ -7,7 +7,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__bd">
-            <input class="weui-input" name="title" placeholder="事件名称" value="{{todoTask.title}}"/>
+            <input class="weui-input" name="title" placeholder="事件名称" value="{{todoTask.title}}" />
           </view>
         </view>
       </view>
@@ -15,7 +15,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">
-            <textarea name="detail" class="weui-textarea" placeholder="事件描述" style="height: 3.3em" value="{{todoTask.detail}}"/>
+            <textarea name="detail" class="weui-textarea" placeholder="事件描述" style="height: 3.3em" value="{{todoTask.detail}}" />
             <view class="weui-textarea-counter">0/200</view>
           </view>
         </view>
@@ -23,23 +23,31 @@
       <view class="page-section important_level">
         <view class="weui-cells__title">重要程度</view>
         <radio-group name="level">
-        <view>
-          <label class="level_1">
-            <radio value="1" checked="{{todoTask.level == '1' ? true : false}}"/>重要紧急</label>
-          <label class="level_2">
-            <radio value="2" checked="{{todoTask.level == '2' ? true : false}}" />重要不紧急</label>
-        </view>
-        <view>
-          <label class="level_3">
-            <radio value="3" checked="{{todoTask.level == '3' ? true : false}}" />不重要紧急</label>
-          <label class="level_4">
-            <radio value="4" checked="{{todoTask.level == '4' ? true : false}}" />不重要不紧急</label>
-        </view>
+          <view class="weui-flex">
+            <view class="weui-flex__item radio_view">
+              <label class="level_1">
+                <radio value="1" checked="{{todoTask.level == '1' ? true : false}}" />重要紧急</label>
+            </view>
+            <view class="weui-flex__item radio_view">
+              <label class="level_2">
+                <radio value="2" checked="{{todoTask.level == '2' ? true : false}}" />重要不紧急</label>
+            </view>
+          </view>
+          <view class="weui-flex">
+            <view class="weui-flex__item radio_view">
+              <label class="level_3">
+                <radio value="3" checked="{{todoTask.level == '3' ? true : false}}" />不重要紧急</label>
+            </view>
+            <view class="weui-flex__item radio_view">
+              <label class="level_4">
+                <radio value="4" checked="{{todoTask.level == '4' ? true : false}}" />不重要不紧急</label>
+            </view>
+          </view>
         </radio-group>
       </view>
       <view class="weui-btn-area">
         <button class="weui-btn" type="primary" formType="submit">确定</button>
-          <button class="weui-btn" type="default" formType="reset">重置</button>
+        <button class="weui-btn" type="default" formType="reset">重置</button>
       </view>
     </form>
     <!-- <view class="weui-cells__tips">底部说明文字底部说明文字</view> -->

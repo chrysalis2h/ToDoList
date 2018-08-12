@@ -1,6 +1,9 @@
 .important_level{
 
 }
+.important_level .radio_view{
+  padding:0 0 10px 14px;
+}
 .important_level .level_1{
   color: #f35325;
 }
