@@ -1,105 +1,144 @@
 const app = getApp()
 Page({
+  data: {
+    "items": [
+      {
+        datetime: '2018-8-6 22:06:20',
+        todoTaskList: [
+          { value: '1', name: '100个字' },
+          { value: '2', name: '100首歌' },
+          { value: '3', name: '100行代码' },
+          { value: '4', name: '100个单词' },
+          { value: '5', name: '100页书' },
+          { value: '6', name: '100粒米' }
+        ]
+      },
+      {
+        datetime: '2018-8-5 22:06:20',
+        todoTaskList: [
+          { value: '7', name: '100个字' },
+          { value: '8', name: '100首歌' },
+          { value: '9', name: '100行代码' },
+          { value: '10', name: '100个单词' },
+          { value: '11', name: '100页书' },
+          { value: '12', name: '100粒米' }
+        ]
+      }
+    ]
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.info("onLoad-list");
+    var that = this;
+    wx.request({
+      url: 'http://todolist.tunnel.qydev.com/pupupuha/todoDetail/list',
+      method: 'GET',
+      success: function (result) {
+        if(result.statusCode == 200){
+          var dataResult = result.data;
+          if (dataResult.code == 200) {
+            that.setData({
+              items: dataResult.value
+            });
+          } else {
+            console.info("fail");
+          }
+        }else{
+           console.info("send request error");
+        }
+      },
+      fail: function (result) { },
+      complete: function (result) { }
+    });
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    console.info("onReady-list");
+    console.info("list.js" + "onReady-list");
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.info(getCurrentPages());
+    console.info("list.js" + getCurrentPages());
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    console.info("onHide-list");
+    console.info("list.js" + "onHide-list");
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    console.info("onUnload-list");
+    console.info("list.js" + "onUnload-list");
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    console.info("onPullDownRefresh-list");
+    console.info("list.js" + "onPullDownRefresh-list");
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    console.info("onReachBottom-list");
+    console.info("list.js" + "onReachBottom-list");
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    console.info("onShareAppMessage-list");
+    console.info("list.js" + "onShareAppMessage-list");
   },
-  data: {
-    items: [
-      {
-        datetime: '2018-8-6 22:06:20',
-        todoTaskList: [
-          { value: '1', name: '今天写100个字' },
-          { value: '2', name: '今天听100首歌' },
-          { value: '3', name: '今天写100行代码' },
-          { value: '4', name: '今天背100个单词' },
-          { value: '5', name: '今天看100页书' },
-          { value: '6', name: '今天吃100粒米' }
-        ]
+  toggleTodoStatus: function (e) {
+    var id = e.currentTarget.dataset.id;
+    var result = e.currentTarget.dataset.status == "1" ? "0" : "1";
+    var that = this;
+    wx.request({
+      url: 'http://todolist.tunnel.qydev.com/pupupuha/todoDetail',
+      method: 'PUT',
+      data:{
+        id: id,
+        result: result
       },
-      {
-        datetime: '2018-8-5 22:06:20',
-        todoTaskList: [
-          { value: '7', name: '85今天写100个字' },
-          { value: '8', name: '85今天听100首歌' },
-          { value: '9', name: '85今天写100行代码' },
-          { value: '10', name: '85今天背100个单词' },
-          { value: '11', name: '85今天看100页书' },
-          { value: '12', name: '85今天吃100粒米' }
-        ]
-      }
-    ]
-  },
-  checkboxChange: function (e) {
-    console.log('checkbox发生change事件，携带value值为：', e.detail.value)
-
-    var items = this.data.items, values = e.detail.value;
-    for (var i = 0, lenI = items.length; i < lenI; ++i) {
-      for (var tNum = 0, lenT = items[i].todoTaskList.length; tNum < lenT; tNum++){
-        items[i].todoTaskList[tNum].checked = false;
-
-        for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
-          if (items[i].todoTaskList[tNum].value == values[j]) {
-            items[i].todoTaskList[tNum].checked = true;
-            break
+      success: function (response) {
+        if(response.statusCode == 200){
+          var dataResponse = response.data;
+          if (dataResponse.code == 200) {
+            
+            var thatItems = that.data.items;
+            for(var i = 0; i < thatItems.length; i++){
+              for(var j = 0; j < thatItems[i].todoTaskList.length; j++){
+                if(id == thatItems[i].todoTaskList[j].id){
+                  thatItems[i].todoTaskList[j].checked = (result == "0" ? false : true);
+                  thatItems[i].todoTaskList[j].result = result;
+                  break;
+                }
+              }
+            }
+            that.setData({
+              items: thatItems
+            });
+          } else {
+            console.info("fail");
           }
+        }else{
+           console.info("send request error");
         }
-      }
-    }
-
-    this.setData({
-      items: items
-    })
+      },
+      fail: function (response) { },
+      complete: function (response) { }
+    });
   }
 })
