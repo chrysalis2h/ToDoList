@@ -5,23 +5,23 @@ Page({
       {
         datetime: '2018-8-6 22:06:20',
         todoTaskList: [
-          { value: '1', name: '100个字' },
-          { value: '2', name: '100首歌' },
-          { value: '3', name: '100行代码' },
-          { value: '4', name: '100个单词' },
-          { value: '5', name: '100页书' },
-          { value: '6', name: '100粒米' }
+          { id: '1', detail: '100个字' , result: 0},
+          { id: '2', detail: '100首歌' , result: 0},
+          { id: '3', detail: '100行代码' , result: 0},
+          { id: '4', detail: '100个单词' , result: 0},
+          { id: '5', detail: '100页书' , result: 0},
+          { id: '6', detail: '100粒米' , result: 0}
         ]
       },
       {
         datetime: '2018-8-5 22:06:20',
         todoTaskList: [
-          { value: '7', name: '100个字' },
-          { value: '8', name: '100首歌' },
-          { value: '9', name: '100行代码' },
-          { value: '10', name: '100个单词' },
-          { value: '11', name: '100页书' },
-          { value: '12', name: '100粒米' }
+          { id: '7', detail: '100个字' , result: 0},
+          { id: '8', detail: '100首歌' , result: 0},
+          { id: '9', detail: '100行代码' , result: 0},
+          { id: '10', detail: '100个单词' , result: 0},
+          { id: '11', detail: '100页书' , result: 0},
+          { id: '12', detail: '100粒米' , result: 0}
         ]
       }
     ]
@@ -30,12 +30,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // 临时注释掉
+    return;
     var that = this;
     wx.request({
       url: 'http://todolist.tunnel.qydev.com/pupupuha/todoDetail/list',
       method: 'GET',
       success: function (result) {
-        if(result.statusCode == 200){
+        if (result.statusCode == 200) {
           var dataResult = result.data;
           if (dataResult.code == 200) {
             that.setData({
@@ -44,8 +46,8 @@ Page({
           } else {
             console.info("fail");
           }
-        }else{
-           console.info("send request error");
+        } else {
+          console.info("send request error");
         }
       },
       fail: function (result) { },
@@ -104,23 +106,40 @@ Page({
   toggleTodoStatus: function (e) {
     var id = e.currentTarget.dataset.id;
     var result = e.currentTarget.dataset.status == "1" ? "0" : "1";
+    // 下面的临时使用
+    var thatItems = this.data.items;
+    for (var i = 0; i < thatItems.length; i++) {
+      for (var j = 0; j < thatItems[i].todoTaskList.length; j++) {
+        if (id == thatItems[i].todoTaskList[j].id) {
+          thatItems[i].todoTaskList[j].checked = (result == "0" ? false : true);
+          thatItems[i].todoTaskList[j].result = result;
+          break;
+        }
+      }
+    }
+    this.setData({
+      items: thatItems
+    });
+    return;
+    // 下面的临时使用
+
     var that = this;
     wx.request({
       url: 'http://todolist.tunnel.qydev.com/pupupuha/todoDetail',
       method: 'PUT',
-      data:{
+      data: {
         id: id,
         result: result
       },
       success: function (response) {
-        if(response.statusCode == 200){
+        if (response.statusCode == 200) {
           var dataResponse = response.data;
           if (dataResponse.code == 200) {
-            
+
             var thatItems = that.data.items;
-            for(var i = 0; i < thatItems.length; i++){
-              for(var j = 0; j < thatItems[i].todoTaskList.length; j++){
-                if(id == thatItems[i].todoTaskList[j].id){
+            for (var i = 0; i < thatItems.length; i++) {
+              for (var j = 0; j < thatItems[i].todoTaskList.length; j++) {
+                if (id == thatItems[i].todoTaskList[j].id) {
                   thatItems[i].todoTaskList[j].checked = (result == "0" ? false : true);
                   thatItems[i].todoTaskList[j].result = result;
                   break;
@@ -133,8 +152,8 @@ Page({
           } else {
             console.info("fail");
           }
-        }else{
-           console.info("send request error");
+        } else {
+          console.info("send request error");
         }
       },
       fail: function (response) { },

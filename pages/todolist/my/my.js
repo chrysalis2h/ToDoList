@@ -93,7 +93,7 @@ Page({
       url: '../logs/logs'
     })
   },
-  getUserInfo: function (e) {
+  bindGetUserInfo: function (e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({

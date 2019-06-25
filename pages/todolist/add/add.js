@@ -66,7 +66,36 @@ Page({
     }
   },
   formSubmit: function(e) {
-    console.log(e.detail.valu-adde);
+    var formDetail = e.detail.value;
+    if(!formDetail.title || !formDetail.detail || !formDetail.level){
+      wx.showToast({
+        title: '内容不能为空',
+        icon: 'none'
+      });
+      return;
+    }
+    wx.request({
+      url: 'http://todolist.tunnel.qydev.com/pupupuha/todoDetail',
+      method: 'POST',
+      data:e.detail.value,
+      success: function (response) {
+        if(response.statusCode == 200){
+          var dataResponse = response.data;
+          if (dataResponse.code == 200) {
+            wx.showToast({
+              title: '保存成功',
+              icon: 'success'
+            });
+          } else {
+            console.info("fail");
+          }
+        }else{
+           console.info("send request error");
+        }
+      },
+      fail: function (response) { },
+      complete: function (response) { }
+    });
   },
   formReset: function(){
     this.setData({

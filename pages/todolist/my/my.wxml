@@ -6,6 +6,16 @@
         <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
         <text class="userinfo-nickname">{{userInfo.nickName}}</text>
       </block>
+      <block>
+        <!-- 如果只是展示用户头像昵称，可以使用 <open-data /> 组件 -->
+        <open-data type="userAvatarUrl"></open-data>
+        <open-data type="userNickName"></open-data>
+        <!-- 需要使用 button 来授权登录 -->
+        <button wx:if="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
+          授权登录
+        </button>
+        <view wx:else>请升级微信版本</view>
+      </block>
     </view>
     <view class="weui-flex" style="padding-top:50%;">
       <view class="weui-flex__item">
@@ -13,7 +23,7 @@
       </view>
       <view class="weui-flex__item">
         <view class="placeholder" bindtap="bindChangeLike">
-          <template is="like" data="{{happyFlag}}"/>
+          <template is="like" data="{{happyFlag}}" />
         </view>
       </view>
       <view class="weui-flex__item">

@@ -1,109 +1,181 @@
-//app.js
+//app.js  
+// 这里是调用公共函数库  
+var util = require('./utils/util.js')
 App({
-  onLaunch: function() {
-    // 展示本地存储能力
-    var logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
 
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        console.info(res);
-        if (res.errMsg == 'login:ok') {
-          wx.request({
-            url: 'http://todolist.tunnel.qydev.com/wx/td/createSession',
-            data: {
-              code: res.code
-            },
-            method: 'GET',
-            success: function(result) {
-              console.info("requestResult")
-              console.log(result.data);
-              // this.setData({
-              //   sessionId: result.data.sessionId
-              // });
-            },
-            fail: function (result) {},
-            complete: function (result) {}
-          });
-        } else {
+    /**  
+    * 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）  
+    */
+    onLaunch: function (options) {
 
-        }
-      }
-    })
-    // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              console.info(res);
-              // console.info(JSON.stringify(res));
-              // 可以将 res 发送给后台解码出 unionId
-              this.globalData.userInfo = res.userInfo
-              
-              // 测试发送请求
-              if (res.errMsg == '1getUserInfo:ok') {
-                wx.request({
-                  url: 'http://todolist.tunnel.qydev.com/wx/td/checkUserInfo',
-                  data: {
-                    code: res.code
-                  },
-                  method: 'POST',
-                  success: function (result) {
-                    console.log(result);
-                  },
-                  fail: function (result) { },
-                  complete: function (result) { }
-                });
-              } else {
+        // 调用API从本地缓存中获取数据  
+        var that = this
+        var logs = wx.getStorageSync('logs') || []
+        logs.unshift(Date.now())
+        wx.setStorageSync('logs', logs)
+        
+    },
 
-              }
+    /**  
+    * 当小程序启动，或从后台进入前台显示，会触发 onShow  
+    */
+    onShow: function (options) {
 
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
-                this.userInfoReadyCallback(res)
-              }
+        var that = this,
+            // scenes是场景值它的类型是整形  
+            scenes = options.scene,
+            // sid是参数,建议兼容ios和android的时候强转换为整形  
+            sid = Number(options.query.sid)
+
+        // 获取用户信息  
+        that.getUserInfo(function (userInfo) {
+            // 判断场景是否是从公众号进入（这里的意思是如果用户从公众号的自定义菜单进入的话且参数sid为1的话触发什么方法）  
+            // 获取场景值在onLaunch方法中也可以获取到，但是呢由于业务要求我们的这个方法需要用户进入就会触发  
+            // 各位可以根据需求去决定在哪里获取合适一些,onLaunch是小程序未关闭的情况下只执行一次,所以各位一定要考虑清楚  
+            if (scenes === 1035 && sid === 1) {
+                // 这里是从什么场景下要执行的方法  
             }
-          })
+        })
+    },
+
+    /**  
+    * 获取用户信息  
+    */
+    getUserInfo: function (cb) {
+        var that = this
+
+        if (this.globalData.userInfo) {
+
+            typeof cb == "function" && cb(this.globalData.userInfo)
+
+        } else {
+            console.info(123);
+            // 调用登录接口  
+            wx.login({
+                success: function (res1) {
+
+                    // 登录成功  
+                    // 在这里登录的时候会返回一个登录凭证，以前是发送一次请求换一个，现在好像是登录凭证有5分钟的有效时间  
+                    // 从这种情况来看微信小程序的发展还是不错的，以前估计没多少人访问，现在访问量上去后后台的布局都重新架构了  
+                    var code = res1.code// 登录凭证
+                    var loginData = {
+                        code : code
+                    };
+                    util.commonAjax(that.globalData.loginUrl, 1, loginData)
+                    .then(function (resolve) {
+                        // 这里自然不用解释了，这是接口返回的参数  
+                        if (resolve.code === '200') {
+                            // 成功  
+                            wx.setStorageSync('openid', resolve.value.openid);
+                            that.globalData.openid = resolve.value.openid;
+                            console.info("请求openid成功");
+                        } else {
+                            // 失败  
+                            console.info("请求openid失败");
+                        }
+                    });
+
+                    wx.getSetting({
+                        success(res) {
+                            if (res.authSetting['scope.userInfo']) {
+                                // 获取用户信息  
+                                wx.getUserInfo({
+                                    // 当你获取用户信息的时候会弹出一个弹框是否允许授权  
+            
+                                    // 这里点击允许触发的方法  
+                                    success: function (res2) {
+                                        console.info(res2);
+                                        that.globalData.userInfo = res2.userInfo
+            
+                                        // 准备数据（下面的这些参数都是必须参数，请不要问为什么，看文档去吧）  
+                                        var data = { encryptedData: res2.encryptedData, iv: res2.iv, code: code }
+            
+                                        // 请求自己的服务器(在这里我结合promise封装了一下request请求，下面会把方法给大家分享一下)  
+                                        util.commonAjax(that.globalData.getUserInfoUrl, 1, data)
+                                            .then(function (resolve) {
+                                                // 这里自然不用解释了，这是接口返回的参数  
+                                                if (resolve.value.code === '200') {
+                                                    // 成功  
+                                                    wx.setStorageSync('userInfo', resolve.value)
+                                                    // 新手们注意一下，记得把下面这个写到这里，有好处。  
+                                                    typeof cb == "function" && cb(that.globalData.userInfo);
+                                                    console.info("请求成功");
+                                                } else {
+                                                    // 失败  
+                                                    console.info("请求失败");
+                                                }
+                                            })
+                                    },
+            
+                                    // 这里是点击拒绝触发的方法  
+                                    fail: function (res2) {
+                                        // 在这里做一下兼容，有些同行业的用户会点击拒绝玩一玩看你们的小程序是否存在bug，  
+                                        // 所以在这里还是加上下面这两行代码吧，打开微信小程序的设置，允许小程序重新授权的页面  
+                                        /*
+                                        wx.openSetting({  
+                                            success: (res) => {  
+                                                // 下面的代码格式按照我的写，不要看工具打印的什么，在这里提醒大家一句，有时候不能相信开发者工具，因为  
+                                                // android和ios还有工具底层的js库是不同的，有些时候坑的你是一点脾气也没有，所以大家注意一下，  
+                                                // 不相信的慢慢的去自己跳坑吧  
+                                                if (res.authSetting["scope.userInfo"]) {  
+                                                    // 进入这里说明用户重新授权了，重新执行获取用户信息的方法  
+                                                    that.getUserInfo()  
+                                                }  
+                                            }  
+                                        })  
+                                        */
+                                        // 可以通过 wx.getSetting 先查询一下用户是否授权了 "scope.record" 这个 scope
+                                        wx.getSetting({
+                                            success(res) {
+                                                if (!res.authSetting['scope.userInfo']) {
+                                                    wx.switchTab({
+                                                        url: 'pages/my/my'
+                                                    });
+                                                    wx.authorize({
+                                                        scope: 'scope.userInfo',
+                                                        success() {
+                                                            // 进入这里说明用户重新授权了，重新执行获取用户信息的方法  
+                                                            that.getUserInfo()
+                                                        }
+                                                    })
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
+                            }else{
+                                wx.switchTab({
+                                    url: 'pages/todolist/my/my'
+                                });
+                            }
+                        }
+                    })
+                }
+            })
         }
-      }
-    })
-  },
-  onShow: function(options) {
-    var appInstance = getApp();
-    /**
-     * path:
-     * query
-     * scene
-     * shareTicket
-     * referrerInfo
-     * referrerInfo.appId
-     * referrerInfo.extraData
-     */
-  },
-  onHide: function(options) {
-    console.log("this is onHide");
-  },
-  onError: function(options) {
-    console.log("this is onError");
-  },
-  onPageNotFound: function(options) {
-    console.log("this is OnPageNotFound");
-    /**
-     * path
-     * query
-     * isEntryPage
-     */
-  },
-  globalData: {
-    userInfo: null,
-    info: "this is a global data",
-    tabIndex: 0,
-    sessionId: null
-  }
-})
+    },
+    openSetting: function () {
+        wx.openSetting({
+            success: (res) => {
+                // 下面的代码格式按照我的写，不要看工具打印的什么，在这里提醒大家一句，有时候不能相信开发者工具，因为  
+                // android和ios还有工具底层的js库是不同的，有些时候坑的你是一点脾气也没有，所以大家注意一下，  
+                // 不相信的慢慢的去自己跳坑吧  
+                if (res.authSetting["scope.userInfo"]) {
+                    // 进入这里说明用户重新授权了，重新执行获取用户信息的方法  
+                    that.getUserInfo()
+                }
+            }
+        })
+    },
+    /**  
+    * 全局变量配置（在这里放一些常量和配置文件，如果公共参数多的话大家也可以去重新布局一个文件，在里面进行设置）  
+    */
+    globalData: {
+        url: 'http://todolist.tunnel.qydev.com',
+        loginUrl: '/pupupuha/user/login',
+        getUserInfoUrl: '/pupupuha/user/getUserInfo',
+        getUserPhoneUrl: '/pupupuha/user/getUserPhone',
+        userInfo: null,
+        openid: null
+    }
+});
